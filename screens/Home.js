@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet} from "react-native";
 import AsyncStorage from '@react-native-community/async-storage';
 import Navigator from './device/testDeviceNavigation';
 import {connect} from 'react-redux';
-
+import AppLogin from './AppLogin';
 
 class Home extends React.Component {
   constructor(props) {
@@ -48,7 +48,7 @@ class Home extends React.Component {
 
   render() {
     return (
-      (this.props.deviceType  && this.props.deviceType == "test_device") ? <Navigator /> : 
+      (this.props.deviceType  && this.props.deviceType == "test_device") ? <AppLogin /> : 
       
         <View  style={styles.container}> 
         <View style={styles.content}>

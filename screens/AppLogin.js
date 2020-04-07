@@ -8,15 +8,17 @@ import {
   statusCodes,
 } from '@react-native-community/google-signin';
 
+import UserNavigation from './user/testUserNavigation';
+
 class AppLogin extends React.Component {
   constructor(props) {
     super(props);
     GoogleSignin.configure();
 
-    this.state = {
-      userInfo: null,
-      error: null,
-    };
+    // this.state = {
+    //   userInfo: null,
+    //   error: null,
+    // };
   }
 
   async componentDidMount() {
@@ -26,7 +28,8 @@ class AppLogin extends React.Component {
   async _getCurrentUser() {
     try {
       const userInfo = await GoogleSignin.signInSilently();
-      this.setState({ userInfo:userInfo, error: null });
+     // this.setState({ userInfo:userInfo, error: null });
+      this.props.toggleUserStatus(userInfo);
     } catch (error) {
       const errorMessage =
         error.code === statusCodes.SIGN_IN_REQUIRED ? 'Please sign in :)' : error.message;
@@ -83,12 +86,8 @@ class AppLogin extends React.Component {
 
   render() {
 
-    const {userInfo} = this.state;
-    return userInfo ? (
-      <View style={[styles.container, styles.pageContainer]}>
-        {this.renderUserInfo(userInfo)}
-     </View>
-    ) : (
+    const {loggedInUser} = this.props;
+    return loggedInUser ? <UserNavigation /> : (
       <View style={[styles.container, styles.pageContainer]}>
         {this.renderSignInButton()}
        </View>
@@ -128,13 +127,13 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) 
     {
       return {
-        deviceType:state.deviceType
+        loggedInUser:state.loggedInUser
       }
     }
     
     const mapDispatchToProps = (dispach) => {
       return {
-        toggleUserStatus: (data) => dispach({ type : 'SET_DEVICE_TYPE', args :{deviceType: data }})
+        toggleUserStatus: (data) => dispach({ type : 'SET_USER_INFO', args :{user: data }})
       }
     };
 export default connect(mapStateToProps, mapDispatchToProps)(AppLogin);
