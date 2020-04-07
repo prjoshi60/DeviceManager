@@ -54,6 +54,10 @@ target 'ScanAndroid' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+
   target 'ScanAndroidTests' do
     inherit! :complete
     # Pods for testing
