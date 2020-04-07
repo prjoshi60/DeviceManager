@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, AsyncStorage, TouchableOpacity, StyleSheet} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet} from "react-native";
+import AsyncStorage from '@react-native-community/async-storage';
 import Navigator from './device/testDeviceNavigation';
 import {connect} from 'react-redux';
 
