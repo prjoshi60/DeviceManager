@@ -8,6 +8,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import RegisterDevice from './RegisterDevice';
 import RegistrationComplete from './RegistrationComplete';
 import DeviceScanner from './DeviceScanner';
+import AppLogin from '../AppLogin';
 
 const Stack = createStackNavigator();
 
@@ -15,6 +16,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Register Device">
+        <Stack.Screen name="AppLogin" component={AppLogin} />
         <Stack.Screen name="RegisterDevice" component={RegisterDevice} />
         <Stack.Screen name="RegistrationComplete" component={RegistrationComplete} />
         <Stack.Screen name="DeviceScanner" component={DeviceScanner} />

@@ -48,29 +48,29 @@ class Home extends React.Component {
 
   render() {
     return (
-      this.props.deviceType && ( this.props.deviceType == "test_device") ? <Navigator /> : 
-      <View  style={styles.container}> 
-      <View style={styles.content}>
-        <TouchableOpacity style={styles.clsButtonCls}  onPress={this.setUserAsTestDevice}>
-        <Text 
-          style={styles.clsButtonText}
-          text="Test Device"
-          color="blue"
-        >Test Device
-        </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.clsButtonCls}  onPress={this.setEndUser}>
-        <Text 
-          style={styles.clsButtonText}
-          color="blue">User Device</Text>
-         
-        </TouchableOpacity>
-      </View>
-
+      (this.props.deviceType  && this.props.deviceType == "test_device") ? <Navigator /> : 
       
-   </View>
-    );
+        <View  style={styles.container}> 
+        <View style={styles.content}>
+          <TouchableOpacity style={styles.clsButtonCls}  onPress={this.setUserAsTestDevice}>
+          <Text 
+            style={styles.clsButtonText}
+            text="Test Device"
+            color="blue"
+          >Test Device
+          </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.clsButtonCls}  onPress={this.setEndUser}>
+          <Text 
+            style={styles.clsButtonText}
+            color="blue">User Device</Text>
+          
+          </TouchableOpacity>
+        </View>
+      </View>
+      
+      );
   }
 }
 

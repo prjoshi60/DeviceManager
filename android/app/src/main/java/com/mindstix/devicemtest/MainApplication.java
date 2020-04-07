@@ -1,4 +1,4 @@
-package com.scanandroid;
+package com.mindstix.devicemtest;
 
 import android.app.Application;
 import android.content.Context;
@@ -9,6 +9,8 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.mindstix.devicemtest.BuildConfig;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 

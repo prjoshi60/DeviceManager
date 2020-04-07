@@ -1,4 +1,4 @@
-package com.scanandroid;
+package com.mindstix.devicemtest;
 
 import com.facebook.react.ReactActivity;
 

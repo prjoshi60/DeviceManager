@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.scanandroid"
+        applicationId "com.mindstix.devicemtest"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

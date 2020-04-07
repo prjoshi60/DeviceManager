@@ -36,7 +36,6 @@ import httpLib from '../../lib/httpServiceLib';
       method: 'get',
       body: [{key: 'id', value: DeviceInfo.getUniqueId()}],
       endPoint: 'GET_DEVICE_INFO',
-      
     };
 
     let data = await httpLib.makeHttpGetRequest(params);

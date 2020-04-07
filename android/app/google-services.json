@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "342397711104",
+    "firebase_url": "https://device-test-b53b4.firebaseio.com",
+    "project_id": "device-test-b53b4",
+    "storage_bucket": "device-test-b53b4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342397711104:android:4b4d2d6b12dd75e5fe79e5",
+        "android_client_info": {
+          "package_name": "com.mindstix.devicemtest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "342397711104-r2v90460echq6vleonij0ecuidmgbtpo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDYo4bSJxA63KCS2y-XEdL4zw9Ou1M6bg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "342397711104-r2v90460echq6vleonij0ecuidmgbtpo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "342397711104-9jq6lcca8s6kdcnhmia0sh2km733gkla.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mindstix.devicemtest"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

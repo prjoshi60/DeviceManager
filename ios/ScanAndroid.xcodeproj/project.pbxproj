@@ -18,6 +18,7 @@
 		2DCD954D1E0B4F2C00145EB5 /* ScanAndroidTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* ScanAndroidTests.m */; };
 		2E24E26E3B7463EACF51C1AF /* libPods-ScanAndroid-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B0EFC705CB9AA33FBA0F8C /* libPods-ScanAndroid-tvOS.a */; };
 		36B779EF1788D946406387E4 /* libPods-ScanAndroid-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0FCE3127B90FE87B3FF2037 /* libPods-ScanAndroid-tvOSTests.a */; };
+		4E6B9610243CC47B00AFBF6F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4E6B960F243CC47B00AFBF6F /* GoogleService-Info.plist */; };
 		6E2215A3E2057B753C362B8B /* libPods-ScanAndroid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BBCE352996A628FFB7DB23A6 /* libPods-ScanAndroid.a */; };
 		C101A35D8012F50A5802D541 /* libPods-ScanAndroid-ScanAndroidTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3219622133B150E8B30A664 /* libPods-ScanAndroid-ScanAndroidTests.a */; };
 /* End PBXBuildFile section */
@@ -58,6 +59,7 @@
 		2D02E47B1E0B4A5D006451C7 /* ScanAndroid-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ScanAndroid-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* ScanAndroid-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ScanAndroid-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		382815851F7B966E125989A8 /* Pods-ScanAndroid-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ScanAndroid-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-ScanAndroid-tvOS/Pods-ScanAndroid-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		4E6B960F243CC47B00AFBF6F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Desktop/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5D323A0F542353A865340EEC /* Pods-ScanAndroid-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ScanAndroid-tvOS.release.xcconfig"; path = "Target Support Files/Pods-ScanAndroid-tvOS/Pods-ScanAndroid-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		B0FCE3127B90FE87B3FF2037 /* libPods-ScanAndroid-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ScanAndroid-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B79A3B19285D33D3400BEDB3 /* Pods-ScanAndroid-ScanAndroidTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ScanAndroid-ScanAndroidTests.debug.xcconfig"; path = "Target Support Files/Pods-ScanAndroid-ScanAndroidTests/Pods-ScanAndroid-ScanAndroidTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 		13B07FAE1A68108700A75B9A /* ScanAndroid */ = {
 			isa = PBXGroup;
 			children = (
+				4E6B960F243CC47B00AFBF6F /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -161,7 +164,6 @@
 				CF668E4137F6818285A03F58 /* Pods-ScanAndroid-tvOSTests.debug.xcconfig */,
 				196ED85928B9A74928BE6B7C /* Pods-ScanAndroid-tvOSTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -209,6 +211,7 @@
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
+				0004F9BAF4D0AA03931C93AA /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -230,6 +233,7 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				C458E6A3EDEF9A7A043CA6A8 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -340,6 +344,7 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				4E6B9610243CC47B00AFBF6F /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,6 +366,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0004F9BAF4D0AA03931C93AA /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ScanAndroid-ScanAndroidTests/Pods-ScanAndroid-ScanAndroidTests-resources.sh",
+				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ScanAndroid-ScanAndroidTests/Pods-ScanAndroid-ScanAndroidTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -431,6 +454,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C458E6A3EDEF9A7A043CA6A8 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ScanAndroid/Pods-ScanAndroid-resources.sh",
+				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ScanAndroid/Pods-ScanAndroid-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D911A7376D9146DAACCF53CF /* [CP] Check Pods Manifest.lock */ = {
@@ -642,7 +683,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mindstix.devicemtest;
 				PRODUCT_NAME = ScanAndroid;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -664,7 +705,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mindstix.devicemtest;
 				PRODUCT_NAME = ScanAndroid;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

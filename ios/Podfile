@@ -57,6 +57,7 @@ target 'ScanAndroid' do
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+  pod 'GoogleSignIn', '~> 5.0.2'
 
   target 'ScanAndroidTests' do
     inherit! :complete
