@@ -1,15 +1,23 @@
-
-
-import React from "react";
-import { View, Text } from "react-native";
+import React from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
 
 export default class RegisterDevice extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  move = () => {
+    const navigation = this.props.navigation;
+    navigation.navigate('RegistrationComplete');
+  };
+
   render() {
     return (
       <View>
-        <Text> Registration of Device! </Text>
+        <TouchableOpacity onPress={this.move}>
+          <Text> Registration of Device! </Text>
+        </TouchableOpacity>
       </View>
     );
   }
 }
-

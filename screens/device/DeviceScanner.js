@@ -1,9 +1,7 @@
-
-
 import React from "react";
-import { View, Text } from "react-native";
+import {View, Text} from 'react-native';
 
-export default class Device Scanner extends React.Component {
+export default class DeviceScanner extends React.Component {
   render() {
     return (
       <View>
@@ -12,4 +10,3 @@ export default class Device Scanner extends React.Component {
     );
   }
 }
-
