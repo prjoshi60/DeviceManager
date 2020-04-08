@@ -48,8 +48,8 @@ class Home extends React.Component {
 
   render() {
     return (
-      (this.props.deviceType  && this.props.deviceType == "test_device") ? <AppLogin /> : 
-      
+      this.props.deviceType ? ((this.props.deviceType == "test_device") ? <Navigator />  : <AppLogin />) : 
+
         <View  style={styles.container}> 
         <View style={styles.content}>
           <TouchableOpacity style={styles.clsButtonCls}  onPress={this.setUserAsTestDevice}>
