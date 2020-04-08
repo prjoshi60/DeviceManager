@@ -59,6 +59,10 @@ target 'ScanAndroid' do
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
   pod 'GoogleSignIn', '~> 5.0.2'
 
+  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
+
+  pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
+
   target 'ScanAndroidTests' do
     inherit! :complete
     # Pods for testing

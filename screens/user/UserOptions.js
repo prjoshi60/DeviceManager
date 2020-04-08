@@ -6,6 +6,11 @@ class UserOptions extends React.Component{
     super(props);
 
   }
+
+  openQRScannerScreen = () => {
+    const navigation = this.props.navigation;
+    navigation.navigate('QRScanner');
+  }
   
   openUserProfileScreen = () => {
     const navigation = this.props.navigation;
@@ -17,7 +22,7 @@ class UserOptions extends React.Component{
       <View style={styles.container}>
         <Text>Please do scan and get the test device.</Text>
         <View style={styles.content}>
-        <TouchableOpacity style={styles.clsButtonCls} onPress={ () => {}}>
+        <TouchableOpacity style={styles.clsButtonCls} onPress={ this.openQRScannerScreen}>
           <Text 
             style={styles.clsButtonText}
             text="Get Device"
