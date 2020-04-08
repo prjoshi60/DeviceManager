@@ -4,23 +4,45 @@ import { View, Text, TouchableOpacity, StyleSheet, Image} from "react-native";
 
 class UserProfile extends React.Component {
 
+
+  
+
   render(){
     let { loggedInUser} = this.props;
     return (
       <View style={styles.container}>
+        <View style={styles.content}>
+          <Image
+            style={styles.profileView}
+            source={{
+              uri:loggedInUser.user.photo}}/>
+          <View>
+          <RenderProfileText
+            props={{key: 'Email: ', value: loggedInUser.user.email}}
+          />
+          <RenderProfileText
+            props={{key: 'Name: ', value: loggedInUser.user.givenName + " " +  loggedInUser.user.familyName }}
+          />
+        </View>
         
-        <Text style={styles.bigBlue}>User PROFILE..</Text>
-        <Image
-        style={styles.profileView}
-        source={{
-          uri:loggedInUser.user.photo}}
-      />
-        <Text>{loggedInUser.user.email}</Text>
+        
+        </View>
       </View>
     );
   }
 
 }
+
+const RenderProfileText = (props) => {
+  console.log(props.props.key);
+  return(
+  <View style={styles.viewRowItem}>
+    <Text style={styles.bigBlue}>{props.props.key}</Text>
+    <Text style={styles.bigBlue}>{props.props.value}</Text>
+  </View> 
+  );
+}
+
 
 const styles = StyleSheet.create({
   container: {
@@ -30,20 +52,24 @@ const styles = StyleSheet.create({
   },
   content: {
     margin: 10,
+    alignContent:'center', 
+    alignItems:'center'
   },
   profileView:{
     height:120,
-    width:120
+    width:120, 
+    borderRadius:60
   }, 
   viewRowItem:{
     margin: 20,
     flexDirection: 'row',
+    
   },
   bigBlue: {
     color: 'blue',
     fontWeight: 'bold',
     fontSize: 13,
-    margin: 10,
+    margin: 0,
   },
   rightSide: {
     color: 'blue',

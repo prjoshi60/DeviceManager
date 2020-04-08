@@ -28,7 +28,7 @@ class AppLogin extends React.Component {
   async _getCurrentUser() {
     try {
       const userInfo = await GoogleSignin.signInSilently();
-     // this.setState({ userInfo:userInfo, error: null });
+      //this.setState({ userInfo:userInfo, error: null });
       this.props.toggleUserStatus(userInfo);
     } catch (error) {
       const errorMessage =
@@ -65,20 +65,17 @@ class AppLogin extends React.Component {
     try {
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.signIn();
-      Alert.alert('No error');
+      this._getCurrentUser();
     } catch (error) {
     
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        Alert.alert("Signin cancelled.");
-        // user cancelled the login flow
+        Alert.alert("Ohh. Signin process is cancelled.");
       } else if (error.code === statusCodes.IN_PROGRESS) {
-        Alert.alert("Signin IN_PROGRESS.");
-        // operation (f.e. sign in) is in progress already
+        Alert.alert("Please wait. Signin process is in progress.");
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        Alert.alert("Signin PLAY_SERVICES_NOT_AVAILABLE.");
-        // play services not available or outdated
+        Alert.alert("Play service are not available.");
       } else {
-        Alert.alert("Signin PLAY_SERVICES_NOT_AVAILABLE. >>");
+        Alert.alert("Unable to so signin.");
         // some other error happened
       }
     }
