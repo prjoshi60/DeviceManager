@@ -63,6 +63,9 @@ target 'ScanAndroid' do
 
   pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
 
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"
+
   target 'ScanAndroidTests' do
     inherit! :complete
     # Pods for testing

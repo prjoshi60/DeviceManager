@@ -2,6 +2,8 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Alert} from "react-native";
 import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
+import httpLib from '../lib/httpServiceLib';
+
 import {
   GoogleSignin,
   GoogleSigninButton,
@@ -15,10 +17,10 @@ class AppLogin extends React.Component {
     super(props);
     GoogleSignin.configure();
 
-    // this.state = {
-    //   userInfo: null,
-    //   error: null,
-    // };
+    this.state = {
+      userInfo: null,
+      userRegistered: null
+    };
   }
 
   async componentDidMount() {
@@ -26,9 +28,16 @@ class AppLogin extends React.Component {
   }
 
   async _getCurrentUser() {
+    console.log("This Get user.");
+    
     try {
       const userInfo = await GoogleSignin.signInSilently();
-      //this.setState({ userInfo:userInfo, error: null });
+      this.setState({ userInfo:userInfo, error: null });
+      if (userInfo.user.email) {
+        this.saveUserDetails(userInfo);
+      } else {
+        Alert.alert(" KA :" + userInfo.user);
+      }
       this.props.toggleUserStatus(userInfo);
     } catch (error) {
       const errorMessage =
@@ -38,6 +47,34 @@ class AppLogin extends React.Component {
         error: new Error(errorMessage),
       });
     }
+  }
+
+  async saveUserDetails(userInfo) {
+
+    let body = {
+      firstName: userInfo.user.givenName,
+      lastName: userInfo.user.familyName,
+      name: userInfo.user.name,
+      email: userInfo.user.email,
+      photo: userInfo.user.email,
+      id: userInfo.user.email
+    };
+    
+    let params = {
+      method: 'post',
+      body: body,
+      endPoint: 'SAVE_USERS_INFO',
+    };
+
+     await httpLib.makeHttpPostRequest(params, (err, data) => {
+      if (err) {
+        console.log(' Service error ', err);
+        this.props.setValidUser(false);
+      } else {
+        console.log(' Service success.', data);
+        this.props.setValidUser(true);
+      }
+    });
   }
 
   renderSignInButton() {
@@ -83,8 +120,11 @@ class AppLogin extends React.Component {
 
   render() {
 
-    const {loggedInUser} = this.props;
-    return loggedInUser ? <UserNavigation /> : (
+    const {loggedInUser, isValidUser} = this.props;
+    console.log("isValidUser: " +isValidUser);
+    return loggedInUser && isValidUser ? (
+      <UserNavigation />
+    ) : (
       <View style={[styles.container, styles.pageContainer]}>
         {this.renderSignInButton()}
        </View>
@@ -99,38 +139,40 @@ const styles = StyleSheet.create({
   alignItems:'center',
   justifyContent:'center'
   },
-      clsButtonCls: {
-        height:50,
-        width:"100%",
-        margin:30,
-        backgroundColor:'#242582',
-        alignItems:"center",
-        borderRadius:10
-     },
-      clsButtonText:{
-        color: 'black',
-        fontWeight: 'bold',
-        fontSize: 18,
-        margin:10
-      },
-      content:{
-        alignItems:'center',
-        flexDirection:'column', 
-        width:"80%"
-      }
+  clsButtonCls: {
+    height:50,
+    width:"100%",
+    margin:30,
+    backgroundColor:'#242582',
+    alignItems:"center",
+    borderRadius:10
+ },
+  clsButtonText:{
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 18,
+    margin:10
+  },
+  content:{
+    alignItems:'center',
+    flexDirection:'column', 
+    width:"80%"
+  }
     });
 
 
 function mapStateToProps(state) 
     {
       return {
-        loggedInUser:state.loggedInUser
+        loggedInUser:state.loggedInUser,
+        isValidUser:state.isValidUser
       }
     }
     
     const mapDispatchToProps = (dispach) => {
       return {
-        toggleUserStatus: (data) => dispach({ type : 'SET_USER_INFO', args :{user: data }})
+        toggleUserStatus: (data) => dispach({ type : 'SET_USER_INFO', args :{user: data }}), 
+        setValidUser: (data) => dispach({ type : 'SET_VALID_USER', args :{ valid:data }}),
       }
     };
 export default connect(mapStateToProps, mapDispatchToProps)(AppLogin);
