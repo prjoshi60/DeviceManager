@@ -20,22 +20,19 @@ class UserOptions extends React.Component{
   render(){
     return(
       <View style={styles.container}>
-        <Text>Please do scan and get the test device.</Text>
         <View style={styles.content}>
-        <TouchableOpacity style={styles.clsButtonCls} onPress={ this.openQRScannerScreen}>
-          <Text 
-            style={styles.clsButtonText}
-            text="Get Device"
-            color="blue"
-          >Test Device
-          </Text>
+          <TouchableOpacity style={styles.clsButtonCls} onPress={ this.openQRScannerScreen}>
+            <Text style={styles.clsButtonText}>Get Device</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.clsButtonCls} onPress={ this.openUserProfileScreen}>
-          <Text 
-            style={styles.clsButtonText}
-            color="blue">User Profile</Text>
+            <Text style={styles.clsButtonText}>User Profile</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity style={styles.clsButtonCls} onPress={ this.openQRScannerScreen}>
+            <Text style={styles.clsButtonText}>Find Device</Text>
+          </TouchableOpacity>
+          
         </View>
       </View>
     );

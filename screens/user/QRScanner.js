@@ -2,22 +2,27 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert} from "react-native";
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera as Camera } from "react-native-camera";
+import {connect} from 'react-redux';
+import httpLib from '../../lib/httpServiceLib';
  
 
 class QRScanner extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      scanned: null,
+    };
+  }
 
   onSuccess = e => {
-    Alert.alert(e.data);
+     this.startDeviceAllocation(e.data);
   };
-  
-  render(){
-    
-    return (
-      <View style={styles.container}>
-        <View style={styles.content}>
-          <Text>QR Scanner</Text>
 
-          <QRCodeScanner
+
+  RenderQRCode() {
+    return (
+      <View>
+      <QRCodeScanner
         onRead={this.onSuccess}
         flashMode={Camera.Constants.FlashMode.torch}
         topContent={
@@ -27,20 +32,69 @@ class QRScanner extends React.Component{
             your computer and scan the QR code.
           </Text>
         }
+        
         bottomContent={
           <TouchableOpacity style={styles.buttonTouchable}>
             <Text style={styles.buttonText}>OK. Got it!</Text>
           </TouchableOpacity>
         }
       />
+      </View>
+    );
+  }
 
+  ScanCompleted() {
+    return (
+      <View>
+        <Text>
+          Device is successfully allocated to you.
+        </Text>
+      </View>
     
+    );
+  }
+
+  async startDeviceAllocation (deviceId) {
+    console.log("[QRScanner] >> [startDeviceAllocation] ");
+
+    let user = this.props.loggedInUser.user;
+
+    let body = {
+      id: deviceId,
+      userEmail: user.email,
+      userName: user.name,
+      startTime: new Date(),
+    };
+
+    let params = {
+      method: 'post',
+      body: body,
+      endPoint: 'ALLOCATE_DEVICE',
+    };
+    
+    await httpLib.makeHttpPostRequest(params, (err, data) => {
+      if (err) {
+        console.log(' Servivce error ');
+        this.setState({scanned: false});
+      } else {
+        console.log(' Servivce success. ');
+        this.setState({scanned: true});
+      }
+    });
+  }
+  
+  render() {
+    return (
+      <View style={styles.container}>
+        <View style={styles.content}>
+         { this.state.scanned === true ? this.ScanCompleted()  : this.RenderQRCode() }
         </View>
       </View>
     );
   }
 
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -48,7 +102,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   content: {
-    margin: 10,
     alignContent: 'center', 
     alignItems: 'center'
   },
@@ -90,4 +143,16 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QRScanner;
+function mapStateToProps(state) 
+    {
+      return {
+        loggedInUser:state.loggedInUser
+      }
+    }
+    
+    const mapDispatchToProps = (dispach) => {
+      return {
+        toggleUserStatus: (data) => dispach({ type : 'SET_USER_INFO', args :{user: data }})
+      }
+    };
+export default connect(mapStateToProps, mapDispatchToProps)(QRScanner);
