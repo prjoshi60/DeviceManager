@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Alert} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform, Alert} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import DeviceInfo from 'react-native-device-info';
 import {connect} from 'react-redux';
@@ -15,43 +15,31 @@ import httpLib from '../../lib/httpServiceLib';
       model: DeviceInfo.getDeviceId(),
       os: DeviceInfo.getSystemName(),
       osVersion: DeviceInfo.getSystemVersion(),
-      showScan: null,
+      customName:null,
+      deviceRegistered: null,
     };
 
     this.storeDataToProps();
-  
-
+    
     DeviceInfo.getDeviceName().then(deviceName => {
       this.setState({dName: deviceName});
     });
   }
 
   componentDidMount() {
-    this.checkDeviceAlreadyRegistered();
+    
   }
 
-  async checkDeviceAlreadyRegistered  () {
-    console.log(" >>> checkDeviceAlreadyRegistered >>");
-    let params = {
-      method: 'get',
-      body: [{key: 'id', value: DeviceInfo.getUniqueId()}],
-      endPoint: 'GET_DEVICE_INFO',
-    };
-
-    let data = await httpLib.makeHttpGetRequest(params);
-
-    console.log(data);
-
-    if (data) {
-      this.setState({showScan:true});
-    }
-  }
   clickRegisterDevice = () => {
+
     let body = {
       deviceId: this.state.deviceId,
+      id: this.state.deviceId,
       model: this.state.model,
       os: this.state.os,
+      deviceName: this.state.dName,
       osVersion: this.state.osVersion,
+      customName: this.state.customName
     };
     let params = {
       method: 'post',
@@ -62,12 +50,22 @@ import httpLib from '../../lib/httpServiceLib';
     httpLib.makeHttpPostRequest(params, (err, data) => {
       if (err) {
         console.log(' Servivce error ');
-        this.setState({showScan: false});
+        this.setState({deviceRegistered: false});
       } else {
         console.log(' Servivce success. ');
-        this.setState({showScan: true});
+        this.setState({deviceRegistered: true});
       }
     });
+  }
+
+  setAsEndUserDevice = async () => {
+    try {
+      await AsyncStorage.removeItem('deviceUsageType');
+      this.props.toggleUserStatus(null);
+    } catch (error) {
+      // Error retrieving data
+      console.log(error.message);
+    }
   }
   
   scanThisDevice = () => {
@@ -96,78 +94,178 @@ import httpLib from '../../lib/httpServiceLib';
     }
   };
 
+  updateDeviceName = (value) => {
+    this.setState({
+      customName: value
+    });
+  }
+
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.content}>
-          <Text style={styles.bigBlue}>Unique ID:{this.state.deviceId}</Text>
-          <Text style={styles.bigBlue}>Model: {this.state.model}</Text>
-          <Text style={styles.bigBlue}>Operating System: {this.state.os}</Text>
-          <Text style={styles.bigBlue}>OS Version: {this.state.osVersion}</Text>
-          <Text style={styles.bigBlue}>Device Name: {this.state.dName}</Text>
-        </View>
-        {
-          this.state.showScan ? 
-            <TouchableOpacity style={styles.clsButtonCls}  onPress={this.scanThisDevice}>
-              <Text 
-                style={styles.clsButtonText}>
-                Scan Device
+      <KeyboardAvoidingView
+        behavior={Platform.Os === 'ios' ? 'padding' : 'height'}
+        style={styles.container}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.container}>
+            <View style={styles.marginnContent}>
+              <Text style={styles.information}>
+                {this.state.deviceRegistered
+                  ? 'Device is registered successfully' 
+                  : 'Please register this device to add it as testing device.'}
               </Text>
-            </TouchableOpacity> : 
-          <TouchableOpacity style={styles.clsButtonCls}  onPress={this.clickRegisterDevice}>
-          <Text 
-            style={styles.clsButtonText}
-            color="blue"
-          >Register Device
-          </Text>
-          </TouchableOpacity>
-      }
-      </View>
+            </View>
+            <View style={styles.content}>
+              <View style={styles.viewRow}>
+                <Text style={styles.leftSide}>UNIQUE ID:</Text>
+                <Text style={styles.rightSide}>{this.state.deviceId}</Text>
+              </View>
+              <View style={styles.viewRow}>
+                <Text style={styles.leftSide}>MODEL :</Text>
+                <Text style={styles.rightSide}>{this.state.model}</Text>
+              </View>
+              <View style={styles.viewRow}>
+                <Text style={styles.leftSide}>OS & VERSION:</Text>
+                <Text style={styles.rightSide}>{this.state.os + " (" +  this.state.osVersion + ")"}</Text>
+              </View>
+              <View style={styles.viewRow}>
+                <Text style={styles.leftSide}>DEVICE NAME :</Text>
+                <Text style={styles.rightSide}>{this.state.dName}</Text>
+              </View>
+              
+              { this.state.deviceRegistered ? (
+                <View style={styles.viewRow}>
+                  <Text style={styles.leftSide}>DEVICE NAME :</Text>
+                  <Text style={styles.rightSide}>{this.state.customName}</Text>
+                </View>
+              ) : (
+                <View style={styles.viewRow}>
+                  <Text style={styles.leftSide}>DEVICE NAME :</Text>
+                  <TextInput
+                    style={styles.rightSideText}
+                    ref={(c) => (this._customName = c)}
+                    value={this.state.customName}
+                    onChangeText={this.updateDeviceName}
+                  />
+                </View>
+              )}
+            </View>
+
+            {this.state.deviceRegistered ? (
+                <TouchableOpacity style={styles.clsButtonCls}  onPress={this.scanThisDevice}>
+                  <Text 
+                    style={styles.clsButtonText}>
+                    Scan Device
+                  </Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={styles.clsButtonCls}
+                onPress={this.clickRegisterDevice}>
+                <Text style={styles.clsButtonText} color="blue">
+                  REGISTER DEVICE
+                </Text>
+              </TouchableOpacity>
+            )}
+
+            <View style={styles.marginnContent}>
+              <Text style={styles.information}>Oops, I want to register as a end-user.</Text>
+            </View>
+
+            <TouchableOpacity
+              style={styles.clsButtonCls}
+              onPress={this.setAsEndUserDevice}>
+              <Text style={styles.clsButtonText}>USER DEVICE</Text>
+            </TouchableOpacity>
+        </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     );
   }
 }
   
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      justifyContent: 'flex-start',
-    },
-    content: {
-      margin: 10,
-    },
-    viewRowItem:{
-      margin: 20,
-      flexDirection: 'row',
-    },
-    bigBlue: {
-      color: 'blue',
-      fontWeight: 'bold',
-      fontSize: 13,
-      margin: 10,
-    },
-    rightSide: {
-      color: 'blue',
-      fontWeight: 'bold',
-      fontSize: 13,
-      width: '60%',
-    },
-    clsButtonCls: {
-      height:50,
-      width:"auto",
-      margin:30,
-      backgroundColor:'#242582',
-      alignItems:"center",
-      borderRadius:10
-   },
-    clsButtonText:{
-      color: 'white',
-      fontWeight: 'bold',
-      fontSize: 18,
-      margin:10
-    },
-  });
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    justifyContent: 'flex-start',
+  },
+  content: {
+    margin: 10,
+  },
+  viewRowItem:{
+    margin: 20,
+    flexDirection: 'row',
+  },
+  bigBlue: {
+    color: 'blue',
+    fontWeight: 'bold',
+    fontSize: 13,
+    margin: 10,
+  },
+  rightSide: {
+    color: 'blue',
+    fontWeight: 'bold',
+    fontSize: 13,
+    width: '60%',
+  },
+  clsButtonCls: {
+    height:50,
+    width:"auto",
+    margin:30,
+    backgroundColor:'#736187',
+    alignItems:"center",
+    borderRadius:10
+  },
+  clsButtonText:{
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 18,
+    margin:10
+  },
+  information:{
+    color: '#68505F',
+    fontSize: 16,
+    margin:10
+  },
+  viewRow:{
+    flexDirection:'row', 
+    height:'auto', 
+    margin:2
+  },
+  rightSide: {
+    color: '#68505F',
+    fontWeight: 'bold',
+    fontSize: 15,
+    margin: 10,
+    flex:3,
+    
+  },
+  leftSide: {
+    color: '#51616A',
+    fontWeight: 'bold',
+    fontSize: 13,
+    margin: 10,
+    flex:2,
+    textAlign:'right'
+  },
+  rightSideText:{
+    color: '#68505F',
+    fontWeight: 'bold',
+    fontSize: 13,
+    margin: 10,
+    height:30,
+    flex:2,
+    borderRadius:2,
+    borderWidth:1,
+    borderColor:"#C9C9C9",
+    borderStyle:'solid',
+    flex:3
+  }, 
+  marginnContent:{
+    margin: 20
+  }
+});
 
   function mapStateToProps(state) {
     return {
@@ -177,7 +275,7 @@ import httpLib from '../../lib/httpServiceLib';
   
   const mapDispatchToProps = (dispach) => {
     return {
-      toggleUserStatus: (data) => dispach({ type : 'C', args : data }),
+      toggleUserStatus: (data) => dispach({ type : 'SET_DEVICE_TYPE', args :{deviceType: data }})
     };
   };
 

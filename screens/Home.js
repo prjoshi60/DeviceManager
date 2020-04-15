@@ -1,9 +1,10 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image} from "react-native";
 import AsyncStorage from '@react-native-community/async-storage';
 import Navigator from './device/testDeviceNavigation';
 import {connect} from 'react-redux';
 import AppLogin from './AppLogin';
+import Images from '../lib/Images';
 
 class Home extends React.Component {
   constructor(props) {
@@ -52,20 +53,18 @@ class Home extends React.Component {
 
         <View  style={styles.container}> 
         <View style={styles.content}>
-          <TouchableOpacity style={styles.clsButtonCls}  onPress={this.setUserAsTestDevice}>
-          <Text 
-            style={styles.clsButtonText}
-            text="Test Device"
-            color="blue"
-          >Test Device
-          </Text>
+          <TouchableOpacity style={styles.clsButtonCls}  onPress={this.setEndUser}>
+            <Image style={styles.image} source={ Images.UserProfileIcon }></Image>
+            <View style={styles.textView}>
+              <Text style={styles.clsButtonText}>USER DEVICE</Text>
+            </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.clsButtonCls}  onPress={this.setEndUser}>
-          <Text 
-            style={styles.clsButtonText}
-            color="blue">User Device</Text>
-          
+          <TouchableOpacity style={styles.clsButtonCls}  onPress={this.setUserAsTestDevice}>
+            <Image style={styles.image} source={ Images.DeviceIcon }></Image>
+            <View style={styles.textView}>
+              <Text style={styles.clsButtonText}>TEST DEVICE</Text>
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -82,39 +81,47 @@ const styles = StyleSheet.create({
   justifyContent:'center'
   },
       clsButtonCls: {
-        height:50,
+        height:'auto',
         width:"100%",
         margin:30,
-        backgroundColor:'#242582',
+        backgroundColor:'#736187',
         alignItems:"center",
-        borderRadius:10
+        borderRadius:10,
+        flexDirection:'row'
      },
       clsButtonText:{
         color: 'white',
         fontWeight: 'bold',
-        fontSize: 18,
-        margin:10
+        fontSize: 24,
       },
       content:{
         alignItems:'center',
         flexDirection:'column', 
         width:"80%"
+      },
+      image:{
+        margin:10,
+        height:120, 
+        width:120, 
+        backgroundColor:'transparent'
+      },
+      textView:{
+        alignItems:'center', 
+        justifyContent:'center', 
+      
       }
-  
-     
     });
 
 
-function mapStateToProps(state) 
-    {
-      return {
-        deviceType:state.deviceType
-      }
-    }
+function mapStateToProps(state){
+  return {
+    deviceType:state.deviceType
+  }
+}
     
-    const mapDispatchToProps = (dispach) => {
-      return {
-        toggleUserStatus: (data) => dispach({ type : 'SET_DEVICE_TYPE', args :{deviceType: data }})
-      }
-    };
+const mapDispatchToProps = (dispach) => {
+  return {
+    toggleUserStatus: (data) => dispach({ type : 'SET_DEVICE_TYPE', args :{deviceType: data }})
+  }
+};
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
