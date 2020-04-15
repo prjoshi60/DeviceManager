@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform, Alert} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform, Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import DeviceInfoLib from '../../lib/deviceInfo';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import httpLib from '../../lib/httpServiceLib';
 
 class DeviceOptions extends React.Component {
@@ -10,13 +10,11 @@ class DeviceOptions extends React.Component {
     super(props);
 
     this.state = {
-      deviceId: DeviceInfoLib.getDeviceUniqueId(), 
-      deviceRegistered: null, 
-      deviceName:null, 
-      status:"NOT REGISTERED"
+      deviceId: DeviceInfoLib.getDeviceUniqueId(),
+      deviceName: null,
     }
   }
-  
+
   componentDidMount() {
     this.getDeviceName();
     this.checkDeviceAlreadyRegistered();
@@ -24,24 +22,28 @@ class DeviceOptions extends React.Component {
 
   async getDeviceName() {
     let name = await DeviceInfoLib.getDeviceName();
-    this.setState({deviceName: name});
+    this.setState({ deviceName: name });
   }
 
   async checkDeviceAlreadyRegistered() {
     let params = {
       method: 'get',
-      body: [{key: 'id', value: this.state.deviceId}],
+      body: [{ key: 'id', value: this.state.deviceId }],
       endPoint: 'GET_DEVICE_INFO',
     };
 
     let data = await httpLib.makeHttpGetRequest(params);
-    
+
     if (data) {
       this.setState({
         deviceName: data.data.customName,
-        deviceRegistered: true,
         status: data.data.allocationStatus,
       });
+      this.props.updateDeviceRegistrationStatus(true);
+      this.props.updateDeviceStatus(data.data.allocationStatus);
+    } else {
+      this.props.updateDeviceRegistrationStatus(false);
+      this.props.updateDeviceStatus('NOT REGISTERED');
     }
   }
 
@@ -49,6 +51,21 @@ class DeviceOptions extends React.Component {
     const navigation = this.props.navigation;
     navigation.navigate('RegisterDevice');
   }
+
+  setAsEndUserDevice = async () => {
+    try {
+      await AsyncStorage.removeItem('deviceUsageType');
+      this.props.toggleUserStatus(null);
+    } catch (error) {
+      // Error retrieving data
+      console.log(error.message);
+    }
+  }
+
+  scanThisDevice = () => {
+    const navigation = this.props.navigation;
+    navigation.navigate('DeviceScanner');
+  };
 
   render() {
     return (
@@ -58,38 +75,38 @@ class DeviceOptions extends React.Component {
             <View style={styles.card}>
               <View style={styles.viewRow}>
                 <Text style={styles.leftSide}>DEVICE NAME: </Text>
-                <Text style={styles.rightSide}>{ this.state.deviceName }</Text>
+                <Text style={styles.rightSide}>{this.state.deviceName}</Text>
               </View>
               <View style={styles.viewRow}>
                 <Text style={styles.leftSide}>STATUS: </Text>
-                <Text style={styles.rightSide}>{this.state.deviceRegistered ?  this.state.status  : 'Not Registered'}</Text>
+                <Text style={styles.rightSide}>{this.props.deviceStatus}</Text>
               </View>
             </View>
-          </View> 
+          </View>
           <View style={styles.lowerSection}>
-              <View style={styles.content}>
-                {this.state.deviceRegistered ? <TouchableOpacity style={styles.clsButtonCls}>
-                  <Text style={styles.clsButtonText}>GET DEVICE</Text>
-                </TouchableOpacity> : <TouchableOpacity style={styles.clsButtonCls} onPress={this.clickRegisterDevice}>
+            <View style={styles.content}>
+              {this.props.deviceRegistered ? <TouchableOpacity style={styles.clsButtonCls} onPress={this.scanThisDevice}>
+                <Text style={styles.clsButtonText}>GET DEVICE</Text>
+              </TouchableOpacity> : <TouchableOpacity style={styles.clsButtonCls} onPress={this.clickRegisterDevice}>
                   <Text style={styles.clsButtonText}>REGISTER DEVICE</Text>
-                </TouchableOpacity> }
-                {
-                   this.state.deviceRegistered ? <TouchableOpacity style={styles.clsButtonCls}>
+                </TouchableOpacity>}
+              {
+                this.props.deviceRegistered ? <TouchableOpacity style={styles.clsButtonCls}>
                   <Text style={styles.clsButtonText}>DELETE DEVICE</Text>
                 </TouchableOpacity> : null}
 
-                {
-                   this.state.deviceRegistered ? <TouchableOpacity style={styles.clsButtonCls}>
-                  <Text style={styles.clsButtonText}> USER DEVICE</Text>
+              {
+                this.props.deviceType == 'test_device' ? <TouchableOpacity style={styles.clsButtonCls} onPress={this.setAsEndUserDevice}>
+                  <Text style={styles.clsButtonText}>USER DEVICE</Text>
                 </TouchableOpacity> : null}
-              </View>
+            </View>
           </View>
         </View>
       </>
     );
   }
 }
-  
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -99,7 +116,7 @@ const styles = StyleSheet.create({
   content: {
     margin: 10,
   },
-  viewRowItem:{
+  viewRowItem: {
     margin: 20,
     flexDirection: 'row',
   },
@@ -123,24 +140,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10
   },
-  clsButtonText:{
+  clsButtonText: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 18,
     margin: 10
   },
-  information:{
+  information: {
     color: '#68505F',
     fontSize: 16,
     margin: 10
   },
-  card:{
-    flex: 1, 
-    backgroundColor: '#4D5C65', 
+  card: {
+    flex: 1,
+    backgroundColor: '#4D5C65',
     margin: 0,
     borderRadius: 10,
-    padding:10
-  }, 
+    padding: 10
+  },
   viewRow: {
     flexDirection: 'row',
     height: 'auto',
@@ -150,17 +167,18 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 14,
-    flex:2,
-    textAlign:'left'
+    flex: 2,
+    textAlign: 'left',
+    marginLeft: 10
   },
   leftSide: {
     color: '#FFFFFF',
     fontWeight: 'bold',
     fontSize: 14,
-    
-    flex:1
+    textAlign: 'right',
+    flex: 1
   },
-  rightSideText:{
+  rightSideText: {
     color: '#68505F',
     fontWeight: 'bold',
     fontSize: 13,
@@ -172,14 +190,14 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     flex: 3
   },
-  marginnContent:{
+  marginnContent: {
     margin: 20
   },
-  upperSection:{
+  upperSection: {
     margin: 20,
     flex: 1
-  }, 
-  lowerSection:{
+  },
+  lowerSection: {
     margin: 20,
     flex: 4
   },
@@ -191,17 +209,21 @@ const styles = StyleSheet.create({
   }
 });
 
-  function mapStateToProps(state) {
-    return {
-      deviceType: state.deviceType
-    };
-  }
-  
-  const mapDispatchToProps = (dispach) => {
-    return {
-      toggleUserStatus: (data) => dispach({ type : 'SET_DEVICE_TYPE', args :{deviceType: data }})
-    };
+function mapStateToProps(state) {
+  return {
+    deviceRegistered: state.deviceRegistered,
+    deviceType: state.deviceType,
+    deviceStatus: state.deviceStatus,
   };
+}
 
-  export default connect(mapStateToProps, mapDispatchToProps)(DeviceOptions
-    );
+const mapDispatchToProps = (dispach) => {
+  return {
+    updateDeviceRegistrationStatus: (data) => dispach({ type: 'SET_REGISTRATION_STATUS', args: { deviceRegistered: data } }),
+    updateDeviceStatus: (data) => dispach({ type: 'SET_DEVICE_STATUS', args: { status: data } }),
+    toggleUserStatus: (data) => dispach({ type: 'SET_DEVICE_TYPE', args: { deviceType: data } })
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DeviceOptions
+);

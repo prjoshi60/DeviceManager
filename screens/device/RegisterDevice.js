@@ -1,33 +1,28 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform, Alert} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform, Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import DeviceInfo from 'react-native-device-info';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import httpLib from '../../lib/httpServiceLib';
 
 
-  class RegisterDevice extends React.Component {
+class RegisterDevice extends React.Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       deviceId: DeviceInfo.getUniqueId(),
       model: DeviceInfo.getDeviceId(),
       os: DeviceInfo.getSystemName(),
       osVersion: DeviceInfo.getSystemVersion(),
-      customName:null,
-      deviceRegistered: null,
+      customName: null
     };
 
     this.storeDataToProps();
-    
-    DeviceInfo.getDeviceName().then(deviceName => {
-      this.setState({dName: deviceName});
-    });
-  }
 
-  componentDidMount() {
-    
+    DeviceInfo.getDeviceName().then(deviceName => {
+      this.setState({ dName: deviceName });
+    });
   }
 
   clickRegisterDevice = () => {
@@ -50,10 +45,9 @@ import httpLib from '../../lib/httpServiceLib';
     httpLib.makeHttpPostRequest(params, (err, data) => {
       if (err) {
         console.log(' Servivce error ');
-        this.setState({deviceRegistered: false});
+        this.props.updateDeviceRegistrationStatus(false);
       } else {
-        console.log(' Servivce success. ');
-        this.setState({deviceRegistered: true});
+        this.props.updateDeviceRegistrationStatus(true);
       }
     });
   }
@@ -67,7 +61,7 @@ import httpLib from '../../lib/httpServiceLib';
       console.log(error.message);
     }
   }
-  
+
   scanThisDevice = () => {
     const navigation = this.props.navigation;
     this.retrieveDeviceData();
@@ -87,7 +81,7 @@ import httpLib from '../../lib/httpServiceLib';
     try {
       const value = await AsyncStorage.getItem('uniqueDeviceId');
       if (value !== null) {
-        this.setState({deviceId : value});
+        this.setState({ deviceId: value });
       }
     } catch (error) {
       // Error retrieving data
@@ -110,8 +104,8 @@ import httpLib from '../../lib/httpServiceLib';
           <View style={styles.container}>
             <View style={styles.marginnContent}>
               <Text style={styles.information}>
-                {this.state.deviceRegistered
-                  ? 'Device is registered successfully' 
+                {this.props.deviceRegistered
+                  ? 'Device is registered successfully'
                   : 'Please register this device to add it as testing device.'}
               </Text>
             </View>
@@ -126,47 +120,47 @@ import httpLib from '../../lib/httpServiceLib';
               </View>
               <View style={styles.viewRow}>
                 <Text style={styles.leftSide}>OS & VERSION:</Text>
-                <Text style={styles.rightSide}>{this.state.os + " (" +  this.state.osVersion + ")"}</Text>
+                <Text style={styles.rightSide}>{this.state.os + " (" + this.state.osVersion + ")"}</Text>
               </View>
               <View style={styles.viewRow}>
                 <Text style={styles.leftSide}>DEVICE NAME :</Text>
                 <Text style={styles.rightSide}>{this.state.dName}</Text>
               </View>
-              
-              { this.state.deviceRegistered ? (
+
+              {this.props.deviceRegistered ? (
                 <View style={styles.viewRow}>
                   <Text style={styles.leftSide}>DEVICE NAME :</Text>
                   <Text style={styles.rightSide}>{this.state.customName}</Text>
                 </View>
               ) : (
-                <View style={styles.viewRow}>
-                  <Text style={styles.leftSide}>DEVICE NAME :</Text>
-                  <TextInput
-                    style={styles.rightSideText}
-                    ref={(c) => (this._customName = c)}
-                    value={this.state.customName}
-                    onChangeText={this.updateDeviceName}
-                  />
-                </View>
-              )}
+                  <View style={styles.viewRow}>
+                    <Text style={styles.leftSide}>DEVICE NAME :</Text>
+                    <TextInput
+                      style={styles.rightSideText}
+                      ref={(c) => (this._customName = c)}
+                      value={this.state.customName}
+                      onChangeText={this.updateDeviceName}
+                    />
+                  </View>
+                )}
             </View>
 
-            {this.state.deviceRegistered ? (
-                <TouchableOpacity style={styles.clsButtonCls}  onPress={this.scanThisDevice}>
-                  <Text 
-                    style={styles.clsButtonText}>
-                    Scan Device
+            {this.props.deviceRegistered ? (
+              <TouchableOpacity style={styles.clsButtonCls} onPress={this.scanThisDevice}>
+                <Text
+                  style={styles.clsButtonText}>
+                  Scan Device
                   </Text>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity
-                style={styles.clsButtonCls}
-                onPress={this.clickRegisterDevice}>
-                <Text style={styles.clsButtonText} color="blue">
-                  REGISTER DEVICE
+                <TouchableOpacity
+                  style={styles.clsButtonCls}
+                  onPress={this.clickRegisterDevice}>
+                  <Text style={styles.clsButtonText} color="blue">
+                    REGISTER DEVICE
                 </Text>
-              </TouchableOpacity>
-            )}
+                </TouchableOpacity>
+              )}
 
             <View style={styles.marginnContent}>
               <Text style={styles.information}>Oops, I want to register as a end-user.</Text>
@@ -177,13 +171,13 @@ import httpLib from '../../lib/httpServiceLib';
               onPress={this.setAsEndUserDevice}>
               <Text style={styles.clsButtonText}>USER DEVICE</Text>
             </TouchableOpacity>
-        </View>
+          </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     );
   }
 }
-  
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -193,7 +187,7 @@ const styles = StyleSheet.create({
   content: {
     margin: 10,
   },
-  viewRowItem:{
+  viewRowItem: {
     margin: 20,
     flexDirection: 'row',
   },
@@ -210,73 +204,73 @@ const styles = StyleSheet.create({
     width: '60%',
   },
   clsButtonCls: {
-    height:50,
-    width:"auto",
-    margin:30,
-    backgroundColor:'#736187',
-    alignItems:"center",
-    borderRadius:10
+    height: 50,
+    width: "auto",
+    margin: 30,
+    backgroundColor: '#736187',
+    alignItems: "center",
+    borderRadius: 10
   },
-  clsButtonText:{
+  clsButtonText: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 18,
-    margin:10
+    margin: 10
   },
-  information:{
+  information: {
     color: '#68505F',
     fontSize: 16,
-    margin:10
+    margin: 10
   },
-  viewRow:{
-    flexDirection:'row', 
-    height:'auto', 
-    margin:2
+  viewRow: {
+    flexDirection: 'row',
+    height: 'auto',
+    margin: 2
   },
   rightSide: {
     color: '#68505F',
     fontWeight: 'bold',
     fontSize: 15,
     margin: 10,
-    flex:3,
-    
+    flex: 3,
+
   },
   leftSide: {
     color: '#51616A',
     fontWeight: 'bold',
     fontSize: 13,
     margin: 10,
-    flex:2,
-    textAlign:'right'
+    flex: 2,
+    textAlign: 'right'
   },
-  rightSideText:{
+  rightSideText: {
     color: '#68505F',
     fontWeight: 'bold',
     fontSize: 13,
     margin: 10,
-    height:30,
-    flex:2,
-    borderRadius:2,
-    borderWidth:1,
-    borderColor:"#C9C9C9",
-    borderStyle:'solid',
-    flex:3
-  }, 
-  marginnContent:{
+    height: 30,
+    flex: 2,
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: "#C9C9C9",
+    borderStyle: 'solid',
+    flex: 3
+  },
+  marginnContent: {
     margin: 20
   }
 });
 
-  function mapStateToProps(state) {
-    return {
-      deviceType: state.deviceType
-    };
-  }
-  
-  const mapDispatchToProps = (dispach) => {
-    return {
-      toggleUserStatus: (data) => dispach({ type : 'SET_DEVICE_TYPE', args :{deviceType: data }})
-    };
+function mapStateToProps(state) {
+  return {
+    deviceRegistered: state.deviceRegistered
   };
+}
 
-  export default connect(mapStateToProps, mapDispatchToProps)(RegisterDevice);
+const mapDispatchToProps = (dispach) => {
+  return {
+    updateDeviceRegistrationStatus: (data) => dispach({ type: 'SET_REGISTRATION_STATUS', args: { deviceRegistered: data } })
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterDevice);
