@@ -149,7 +149,7 @@ class RegisterDevice extends React.Component {
               <TouchableOpacity style={styles.clsButtonCls} onPress={this.scanThisDevice}>
                 <Text
                   style={styles.clsButtonText}>
-                  Scan Device
+                  DISPLAY QR
                   </Text>
               </TouchableOpacity>
             ) : (

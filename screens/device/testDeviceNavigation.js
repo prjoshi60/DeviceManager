@@ -9,6 +9,7 @@ import RegisterDevice from './RegisterDevice';
 import RegistrationComplete from './RegistrationComplete';
 import DeviceScanner from './DeviceScanner';
 import DeviceOptions from './DeviceOptions';
+import DevicesList from '../List/DevicesList';
 
 const Stack = createStackNavigator();
 
@@ -50,6 +51,17 @@ function App() {
           },
         }}
         />
+        <Stack.Screen name="DevicesList" component={DevicesList} options={{
+          title: 'Devices List',
+          headerBackTitle: 'Back',
+          headerStyle: {
+            backgroundColor: '#3C484F',
+          },
+          headerTintColor: '#FFF',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

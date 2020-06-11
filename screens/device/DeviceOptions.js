@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform, Image } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+
 import DeviceInfoLib from '../../lib/deviceInfo';
 import { connect } from 'react-redux';
 import httpLib from '../../lib/httpServiceLib';
+import Images from '../../lib/Images';
 
 class DeviceOptions extends React.Component {
   constructor(props) {
@@ -52,7 +54,7 @@ class DeviceOptions extends React.Component {
     navigation.navigate('RegisterDevice');
   }
 
-  setAsEndUserDevice = async () => {
+  removeDeviceUsageType = async () => {
     try {
       await AsyncStorage.removeItem('deviceUsageType');
       this.props.toggleUserStatus(null);
@@ -67,45 +69,65 @@ class DeviceOptions extends React.Component {
     navigation.navigate('DeviceScanner');
   };
 
+  openDeviceListScreen = () => {
+    const navigation = this.props.navigation;
+    navigation.navigate('DevicesList');
+  }
+
   render() {
     return (
-      <>
-        <View style={styles.container}>
-          <View style={styles.upperSection}>
-            <View style={styles.card}>
-              <View style={styles.viewRow}>
-                <Text style={styles.leftSide}>DEVICE NAME: </Text>
-                <Text style={styles.rightSide}>{this.state.deviceName}</Text>
-              </View>
-              <View style={styles.viewRow}>
-                <Text style={styles.leftSide}>STATUS: </Text>
-                <Text style={styles.rightSide}>{this.props.deviceStatus}</Text>
-              </View>
-            </View>
-          </View>
-          <View style={styles.lowerSection}>
-            <View style={styles.content}>
-              {this.props.deviceRegistered ? <TouchableOpacity style={styles.clsButtonCls} onPress={this.scanThisDevice}>
-                <Text style={styles.clsButtonText}>GET DEVICE</Text>
-              </TouchableOpacity> : <TouchableOpacity style={styles.clsButtonCls} onPress={this.clickRegisterDevice}>
-                  <Text style={styles.clsButtonText}>REGISTER DEVICE</Text>
-                </TouchableOpacity>}
-              {
-                this.props.deviceRegistered ? <TouchableOpacity style={styles.clsButtonCls}>
-                  <Text style={styles.clsButtonText}>DELETE DEVICE</Text>
-                </TouchableOpacity> : null}
 
-              {
-                this.props.deviceType == 'test_device' ? <TouchableOpacity style={styles.clsButtonCls} onPress={this.setAsEndUserDevice}>
-                  <Text style={styles.clsButtonText}>USER DEVICE</Text>
-                </TouchableOpacity> : null}
+      <View style={styles.container}>
+        <View style={styles.upperSection}>
+          <View style={styles.card}>
+            <View style={styles.viewRow}>
+              <Text style={styles.leftSide}>DEVICE NAME: </Text>
+              <Text style={styles.rightSide}>{this.state.deviceName}</Text>
+            </View>
+            <View style={styles.viewRow}>
+              <Text style={styles.leftSide}>STATUS: </Text>
+              <Text style={styles.rightSide}>{this.props.deviceStatus}</Text>
             </View>
           </View>
         </View>
-      </>
+        <View style={styles.lowerSection}>
+          <View style={styles.tilesContainerRow}>
+            <View style={styles.tileView}>
+              {this.props.deviceRegistered ? <TouchableOpacity style={styles.tileButtonView} onPress={this.scanThisDevice}>
+                <Image style={styles.imagebtn} source={Images.ShowQR}></Image>
+                <Text style={styles.clsButtonText}>DISPLAY QR</Text>
+              </TouchableOpacity> : <TouchableOpacity style={styles.tileButtonView} onPress={this.clickRegisterDevice}>
+                  <Image style={styles.imagebtn} source={Images.RegisterDevice}></Image>
+                  <Text style={styles.clsButtonText}>REGISTER DEVICE</Text>
+                </TouchableOpacity>}
+            </View>
+            <View style={styles.tileView}>
+              <TouchableOpacity style={styles.tileButtonView}>
+                <Image style={styles.imagebtn} source={Images.DeleteCross} />
+                <Text style={styles.clsButtonText}>SHOW QR</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.tilesContainerRow}>
+            <View style={styles.tileView}>
+              <TouchableOpacity style={styles.tileButtonView} onPress={this.openDeviceListScreen}>
+                <Image style={styles.imagebtn} source={Images.ListBtn} />
+                <Text style={styles.clsButtonText}>DEVICES</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.tileView}>
+              <TouchableOpacity style={styles.tileButtonView} onPress={this.removeDeviceUsageType}>
+                <Image style={styles.imagebtn} source={Images.ChangeBtn} />
+                <Text style={styles.clsButtonText}>CHANGE TYPE</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </View >
     );
   }
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -206,7 +228,28 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexDirection: 'column',
     alignItems: 'center'
-  }
+  },
+  imagebtn: {
+    width: 100,
+    height: 100,
+    marginTop: 20
+  },
+  tilesContainerRow: {
+    height: 200,
+    flexDirection: 'row',
+  },
+  tileView: {
+    flex: 1,
+  },
+  tileButtonView: {
+    flex: 1,
+
+    borderRadius: 10,
+    margin: 8,
+    backgroundColor: "#6E8490",
+    justifyContent: "flex-start",
+    alignItems: 'center'
+  },
 });
 
 function mapStateToProps(state) {
